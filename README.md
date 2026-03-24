@@ -1,3 +1,3 @@
-# DevOpsStuff
+# DevOpsRepository
 
-This is a random collection of exercises I am populating
+This is a collection of exercises.
