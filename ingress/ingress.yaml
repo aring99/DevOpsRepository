@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: web-ingress
+#  annotations: 
+#you can put specific rules and access levels for nginx here
+  labels:
+    name: web-ingress
+spec:
+  rules:
+  - host: mysite.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: websrvc
+            port:
+              number: 8080
