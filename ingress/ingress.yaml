@@ -18,3 +18,6 @@ spec:
             name: websrvc
             port:
               number: 8080
+#we added mysite.local to the hosts file, so that we can connect the ip with mysite.local
+#since we have defined mysite.local, it is going to be shown on web, however
+#nginx doesn't know it's IP, the default record is empty and will return 404 with the IP
