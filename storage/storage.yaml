@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv01
+spec:
+  capacity:
+    storage: 2Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: admstor
+  hostPath:
+    path: /data/pv01
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mypvc
+spec:
+  storageClassName: admstor
+  resources:
+    requests:
+      storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: storagedemo
+  labels:
+    name: pvcdemo
+spec:
+  containers:
+  - name: democontainer
+    image: nginx:latest
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    ports:
+      - containerPort: 80
+    volumeMounts:
+      - name: pvstor
+        mountPath: /usr/share/nginx/html
+  volumes:
+    - name: pvstor
+      persistentVolumeClaim:
+        claimName: mypvc
+
+#And now what we're doing is we've created our persistent volume.
+
+#We've now created our persistent volume claim.
+
+#We're now adding a volume which gets its storage from the persistent volume claim, and now we're adding
+
+#it as a mount inside our container.
+
+#adding a mock section for the config map
+
+
+#    volumeMounts:
+#      - name: nginx-config
+#        mountPath: /etc/nginx/nginx.conf
+#        subPath: nginx.conf
+#  volumes:
+#    - name: nginx-conf
+#      ConfigMap:
+#        name: nginx-conf
+#        items:
+#          - key: nginx.conf  
+#            path: nginx.conf
