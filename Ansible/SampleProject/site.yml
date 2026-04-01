@@ -1,0 +1,8 @@
+- name: Setup Monitoring Stack
+  hosts: localhost
+  become: true
+  # yes didn't work
+
+  roles:
+    - prometheus
+    - grafana

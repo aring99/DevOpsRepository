@@ -1,0 +1,45 @@
+- name: Create Prometheus user
+  user:
+    name: prometheus
+    shell: /sbin/nologin
+
+- name: Download Prometheus
+  get_url:
+    url: "https://github.com/prometheus/prometheus/releases/download/v{{ prometheus_version }}/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz"
+    dest: /tmp/prometheus.tar.gz
+
+- name: Extract Prometheus
+  unarchive:
+    src: /tmp/prometheus.tar.gz
+    dest: /opt/
+    remote_src: yes
+
+- name: Create config directory
+  file:
+    path: /etc/prometheus
+    state: directory
+
+- name: Copy config file
+  template:
+    src: prometheus.yml.j2
+    dest: /etc/prometheus/prometheus.yml
+
+- name: Create systemd service
+  copy:
+    dest: /etc/systemd/system/prometheus.service
+    content: |
+      [Unit]
+      Description=Prometheus
+
+      [Service]
+      ExecStart=/opt/prometheus-{{ prometheus_version }}.linux-amd64/prometheus \
+        --config.file=/etc/prometheus/prometheus.yml
+
+      [Install]
+      WantedBy=multi-user.target
+
+- name: Start Prometheus
+  systemd:
+    name: prometheus
+    enabled: yes
+    state: started
